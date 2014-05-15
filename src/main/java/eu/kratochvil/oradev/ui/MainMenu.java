@@ -1,5 +1,7 @@
-package eu.kratochvil.oradev;
+package eu.kratochvil.oradev.ui;
 
+import eu.kratochvil.oradev.ui.window.RegisteredWindow;
+import eu.kratochvil.oradev.ui.window.WindowsRegister;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -13,16 +15,14 @@ import java.awt.event.*;
 public class MainMenu implements ActionListener, ItemListener {
     public static final Logger logger = LogManager.getLogger(MainMenu.class);
 
-    JDesktopPane theDesktop;
+    JTabbedPane theDesktop;
 
-    public MainMenu(JDesktopPane theDesktop) {
+    public MainMenu(JTabbedPane theDesktop) {
         this.theDesktop = theDesktop;
     }
 
     public JMenuBar createMainMenu() {
         JMenuBar menuBar = new JMenuBar();
-        this.theDesktop = theDesktop;
-
         menuBar.add(getFileMenu());
         menuBar.add(getEditMenu());
         menuBar.add(getSessionMenu());
@@ -40,12 +40,12 @@ public class MainMenu implements ActionListener, ItemListener {
                 "The only menu in this program that has menu items");
 
         {
-            JMenuItem menuItem = new JMenuItem("A text-only menu item",
-                    KeyEvent.VK_T);
-            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_1, InputEvent.ALT_MASK));
+            JMenuItem menuItem = new JMenuItem("New SQL RegisteredWindow",
+                    KeyEvent.CTRL_MASK + KeyEvent.VK_N);
+            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_MASK));
             menuItem.getAccessibleContext().setAccessibleDescription(
-                    "This doesn't really do anything");
-            menuItem.setActionCommand("TEST");
+                    "Open new SQL window");
+            menuItem.setActionCommand("NEW_SQL_WINDOW");
             menuItem.addActionListener(this);
             menu.add(menuItem);
         }
@@ -130,7 +130,7 @@ public class MainMenu implements ActionListener, ItemListener {
 
     private JMenu getWindowMenu() {
         JMenu menu;
-        menu = new JMenu("Window");
+        menu = new JMenu("RegisteredWindow");
         menu.getAccessibleContext().setAccessibleDescription(
                 "The only menu in this program that has menu items");
 
@@ -170,16 +170,15 @@ public class MainMenu implements ActionListener, ItemListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         logger.debug("ActionPerformed: {}", e);
+        RegisteredWindow window = WindowsRegister.getWindows().get(e.getActionCommand());
+        if (window == null) {
+            logger.warn("No registered window for command: {}", e.getActionCommand());
+            return ;
+        }
 
-        // create internal frame
-        JInternalFrame frame = new JInternalFrame("Internal Frame", true, true, true, true);
 
-        MyJPanel panel = new MyJPanel(); // create new panel
-        frame.add(panel, BorderLayout.CENTER); // add panel
-        frame.pack(); // set internal frame to size of contents
+        theDesktop.addTab(window.getCaption(), null, window.getPanel(), "Does nothing");
 
-        theDesktop.add(frame); // attach internal frame
-        frame.setVisible(true); // show internal frame
         // TODO Add implementation
     }
 
@@ -188,5 +187,14 @@ public class MainMenu implements ActionListener, ItemListener {
         logger.debug("ItemStateChanged: {}", e);
 
         // TODO Add implementation
+    }
+
+    protected JComponent makeTextPanel(String text) {
+        JPanel panel = new JPanel(false);
+        JLabel filler = new JLabel(text);
+        filler.setHorizontalAlignment(JLabel.CENTER);
+        panel.setLayout(new GridLayout(1, 1));
+        panel.add(filler);
+        return panel;
     }
 }

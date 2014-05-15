@@ -1,5 +1,8 @@
 package eu.kratochvil.oradev;
 
+import eu.kratochvil.oradev.database.DatabaseConnection;
+import eu.kratochvil.oradev.ui.MainAppWindow;
+import eu.kratochvil.oradev.ui.window.WindowsRegister;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -15,11 +18,16 @@ public class App {
 
     public static void main(String[] args) {
         logger.info("Starting application");
+
+        DatabaseConnection.getInstance().connect();
+        new WindowsRegister();
+
         MainAppWindow mainAppWindow = new MainAppWindow();
         mainAppWindow.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        mainAppWindow.setVisible(true);
-        mainAppWindow.setSize(300, 200);
+        //mainAppWindow.setSize(300, 200);
         mainAppWindow.setLocationRelativeTo(null);
+        mainAppWindow.pack();
+        mainAppWindow.setVisible(true);
     }
 
 }

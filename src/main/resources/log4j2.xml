@@ -10,7 +10,7 @@
             <AppenderRef ref="console" />
         </Root>
 
-        <Logger name="eu.kratochvil.oradev" level="debug" />
+        <Logger name="eu.kratochvil.oradev" level="trace" />
 
     </Loggers>
 </Configuration>
