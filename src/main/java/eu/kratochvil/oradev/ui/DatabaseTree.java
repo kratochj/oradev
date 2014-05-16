@@ -9,6 +9,8 @@ import org.apache.logging.log4j.Logger;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeCellRenderer;
+import java.awt.*;
 
 /**
  * @author Jiri Kratochvil <jiri.kratochvil@topmonks.com>
@@ -21,11 +23,32 @@ public class DatabaseTree {
     }
 
     private JTree refresh() {
-        DefaultMutableTreeNode database = new DefaultMutableTreeNode("Database");
+        DefaultMutableTreeNode database = new DefaultMutableTreeNode(new DatabaseNodeObject("Database", Icons.DATABASE));
         createTables(database);
         createViews(database);
         createPlSQL(database);
-        return new JTree(database);
+
+        JTree tree = new JTree(database);
+        setTreeRenderer(tree);
+        return tree;
+    }
+
+    private void setTreeRenderer(JTree tree) {
+        tree.setCellRenderer(new DefaultTreeCellRenderer() {
+            @Override
+            public Component getTreeCellRendererComponent(JTree tree,
+                                                          Object value, boolean selected, boolean expanded,
+                                                          boolean isLeaf, int row, boolean focused) {
+                Component c = super.getTreeCellRendererComponent(tree, value,
+                        selected, expanded, isLeaf, row, focused);
+
+
+                if ((value instanceof DefaultMutableTreeNode) && (((DefaultMutableTreeNode)value).getUserObject() instanceof DatabaseNodeObject)) {
+                    setIcon(((DatabaseNodeObject)(((DefaultMutableTreeNode)value).getUserObject())).getIcon().getIcon());
+                }
+                return c;
+            }
+        });
     }
 
     private void createPlSQL(DefaultMutableTreeNode database) {
@@ -34,7 +57,7 @@ public class DatabaseTree {
     }
 
     private void createViews(DefaultMutableTreeNode database) {
-        DefaultMutableTreeNode views = new DefaultMutableTreeNode("Views");
+        DefaultMutableTreeNode views = new DefaultMutableTreeNode(new DatabaseNodeObject("Views", Icons.VIEW));
 
         for (ViewInfo view : new Views().load()) {
             logger.trace("Adding table: {}", view);
@@ -45,7 +68,7 @@ public class DatabaseTree {
     }
 
     private void createTables(DefaultMutableTreeNode database) {
-        DefaultMutableTreeNode tables = new DefaultMutableTreeNode("Tables");
+        DefaultMutableTreeNode tables = new DefaultMutableTreeNode(new DatabaseNodeObject("Tables", Icons.TABLE));
 
         for (TableInfo table : new Tables().load()) {
             logger.trace("Adding table: {}", table);
