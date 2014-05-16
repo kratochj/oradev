@@ -27,6 +27,10 @@ public class DatabaseConnection {
         return instance;
     }
 
+    public ActiveConnectionInfo getActiveConnectionInfo() {
+        return activeConnectionInfo;
+    }
+
     public Connection getConnection() {
         return connection;
     }
