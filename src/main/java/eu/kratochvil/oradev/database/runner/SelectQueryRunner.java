@@ -19,7 +19,8 @@ public class SelectQueryRunner implements QueryRunner {
 
     @Override
     public void execute(EnhancedTableModel tableModel, String sql) {
-        String sqlLimited = "select * from (" + sql + ") where rownum < " + FETCH_SIZE + 1;
+        String sqlLimited = "select * from (" + sql + ") where rownum <= " + (FETCH_SIZE + 1);
+        logger.debug("SQL: {}", sqlLimited);
 
         try {
             ((SelectQueryTableModel)tableModel).getTableData().clear();
@@ -44,7 +45,7 @@ public class SelectQueryRunner implements QueryRunner {
                     }
                 }
 
-                if (count > FETCH_SIZE) {
+                if (count <= FETCH_SIZE) {
                     List<DatabaseCell> row = new ArrayList<DatabaseCell>();
                     row.add(new DatabaseCell("#", String.valueOf(count), ""));
                     for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
@@ -60,7 +61,7 @@ public class SelectQueryRunner implements QueryRunner {
             } else {
                 ((SelectQueryTableModel) tableModel).setSize(count);
             }
-
+            logger.debug("Fetched {} records", count);
 
         } catch (SQLException e) {
             logger.warn(e.getMessage(), e);
