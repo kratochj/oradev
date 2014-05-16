@@ -1,5 +1,6 @@
 package eu.kratochvil.oradev.ui.window;
 
+import eu.kratochvil.oradev.ui.AutocompletionProvider;
 import eu.kratochvil.oradev.database.runner.EnhancedTableModel;
 import eu.kratochvil.oradev.database.runner.QueryRunner;
 import eu.kratochvil.oradev.database.runner.SelectQueryRunner;
@@ -7,6 +8,11 @@ import eu.kratochvil.oradev.database.runner.SelectQueryTableModel;
 import eu.kratochvil.oradev.ui.UiComponents;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.fife.ui.autocomplete.AutoCompletion;
+import org.fife.ui.autocomplete.CompletionProvider;
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
+import org.fife.ui.rtextarea.RTextScrollPane;
 
 import javax.swing.*;
 import javax.swing.table.TableModel;
@@ -17,8 +23,8 @@ import java.awt.event.ActionListener;
 /**
  * @author Jiri Kratochvil <jiri.kratochvil@topmonks.com>
  */
-public class NewSQLWindow implements RegisteredWindow {
-    public static final Logger logger = LogManager.getLogger(NewSQLWindow.class);
+public class SQLWindow implements RegisteredWindow {
+    public static final Logger logger = LogManager.getLogger(SQLWindow.class);
 
     EnhancedTableModel tableModel = new SelectQueryTableModel();
     JTable table;
@@ -44,16 +50,27 @@ public class NewSQLWindow implements RegisteredWindow {
 
         JPanel sqlEditor = new JPanel(new BorderLayout());
 
-        final JTextArea jTextArea = new JTextArea(10, 0);
-        sqlEditor.add(jTextArea, BorderLayout.CENTER);
+        final RSyntaxTextArea textArea = new RSyntaxTextArea(20, 60);
+        textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_SQL);
+        //textArea.setCodeFoldingEnabled(true);
+        RTextScrollPane sp = new RTextScrollPane(textArea);
+        //cp.add(sp);
+
+        //final JTextArea jTextArea = new JTextArea(10, 0);
+        sqlEditor.add(sp, BorderLayout.CENTER);
+
+        // Autocompletion
+        CompletionProvider provider = new AutocompletionProvider().createCompletionProvider();
+        AutoCompletion ac = new AutoCompletion(provider);
+        ac.install(textArea);
 
         JButton executeSql = new JButton("Run");
         executeSql.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                logger.debug("Executing query: {}", jTextArea.getText());
+                logger.debug("Executing query: {}", textArea.getText());
                 QueryRunner runner = new SelectQueryRunner();
-                runner.execute(tableModel, jTextArea.getText());
+                runner.execute(tableModel, textArea.getText());
                 tableModel.fireTableStructureChanged();
                 splitPane.add(createTable(tableModel), JSplitPane.BOTTOM);
                 if (tableModel.size()<0) {

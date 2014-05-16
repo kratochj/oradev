@@ -14,7 +14,7 @@ public class WindowsRegister {
 
     public WindowsRegister() {
         logger.debug("Initializing application windows");
-        register(new NewSQLWindow());
+        register(new SQLWindow());
         register(new TestWindow());
     }
 
