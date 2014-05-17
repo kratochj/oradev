@@ -30,6 +30,8 @@ public class SQLWindow implements RegisteredWindow {
     EnhancedTableModel tableModel = new SelectQueryTableModel();
     JTable table;
 
+    String windowCaption = "SQL Window";
+
     @Override
     public String getCode() {
         return "NEW_SQL_WINDOW";
@@ -37,11 +39,15 @@ public class SQLWindow implements RegisteredWindow {
 
     @Override
     public String getCaption() {
-        return "SQL Window";
+        return windowCaption;
     }
 
     @Override
     public JComponent getPanel() {
+        return getPanel("");
+    }
+
+    public JComponent getPanel(String sql) {
         JPanel panel = new JPanel();
         panel.setLayout(new GridLayout(1, 1));
 
@@ -58,6 +64,7 @@ public class SQLWindow implements RegisteredWindow {
                 requestFocus();
             }
         };
+        textArea.setText(sql);
 
         textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_SQL);
         //textArea.setCodeFoldingEnabled(true);
@@ -97,6 +104,11 @@ public class SQLWindow implements RegisteredWindow {
         panel.add(splitPane);
 
         textArea.grabFocus();
+
+        if (StringUtils.isNotBlank(sql)) {
+            runQuery(textArea, splitPane);
+        }
+
         return panel;
     }
 

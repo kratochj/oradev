@@ -178,8 +178,6 @@ public class MainMenu implements ActionListener, ItemListener {
 
 
         theDesktop.addTab(window.getCaption(), null, window.getPanel(), "Does nothing");
-
-        // TODO Add implementation
     }
 
     @Override

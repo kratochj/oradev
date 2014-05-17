@@ -6,6 +6,9 @@ import eu.kratochvil.oradev.database.Views;
 import eu.kratochvil.oradev.database.model.EntityInfo;
 import eu.kratochvil.oradev.database.model.TableInfo;
 import eu.kratochvil.oradev.database.model.ViewInfo;
+import eu.kratochvil.oradev.ui.window.RegisteredWindow;
+import eu.kratochvil.oradev.ui.window.SQLWindow;
+import eu.kratochvil.oradev.ui.window.WindowsRegister;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -46,7 +49,15 @@ public class DatabaseTree {
                             DefaultMutableTreeNode node = (DefaultMutableTreeNode) selPath.getLastPathComponent();
                             if (node.getUserObject() instanceof EntityInfo) {
                                 String sql = ((EntityInfo) (node.getUserObject())).getQuery();
+                                String title = node.getUserObject().toString();
                                 logger.debug("Loading entity preview - {}", sql);
+
+                                RegisteredWindow window = WindowsRegister.getWindows().get("NEW_SQL_WINDOW");
+                                if (window == null) {
+                                    logger.warn("No registered window for command: {}", "NEW_SQL_WINDOW");
+                                    return;
+                                }
+                                MainAppWindow.getInstance().getTheDesktop().addTab(title, null, ((SQLWindow)window).getPanel(sql), "Does nothing");
                             }
                         }
                     }

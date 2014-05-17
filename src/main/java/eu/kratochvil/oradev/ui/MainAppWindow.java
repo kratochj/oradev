@@ -14,8 +14,11 @@ public class MainAppWindow extends JFrame {
     private JTabbedPane theDesktop;
     private StatusBar statusBar;
 
+    static MainAppWindow instance;
+
     public MainAppWindow() throws HeadlessException {
         super("OraDev");
+        instance = this;
 
         Container pane = this.getContentPane();
         pane.setLayout(new BorderLayout());
@@ -53,5 +56,15 @@ public class MainAppWindow extends JFrame {
 
     }
 
+    public static MainAppWindow getInstance() {
+        return instance;
+    }
 
+    public JTabbedPane getTheDesktop() {
+        return theDesktop;
+    }
+
+    public StatusBar getStatusBar() {
+        return statusBar;
+    }
 }
