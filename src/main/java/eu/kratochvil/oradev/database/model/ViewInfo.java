@@ -3,7 +3,7 @@ package eu.kratochvil.oradev.database.model;
 /**
  * @author Jiri Kratochvil <jiri.kratochvil@topmonks.com>
  */
-public class ViewInfo {
+public class ViewInfo implements EntityInfo {
 
     String viewname;
 
@@ -15,4 +15,10 @@ public class ViewInfo {
     public String toString() {
        return viewname;
     }
+
+    @Override
+    public String getQuery() {
+        return "select * from " + viewname;
+    }
+
 }

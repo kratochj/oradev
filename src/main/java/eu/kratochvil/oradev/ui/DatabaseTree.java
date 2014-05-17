@@ -3,6 +3,7 @@ package eu.kratochvil.oradev.ui;
 import eu.kratochvil.oradev.database.Structure;
 import eu.kratochvil.oradev.database.Tables;
 import eu.kratochvil.oradev.database.Views;
+import eu.kratochvil.oradev.database.model.EntityInfo;
 import eu.kratochvil.oradev.database.model.TableInfo;
 import eu.kratochvil.oradev.database.model.ViewInfo;
 import org.apache.logging.log4j.LogManager;
@@ -11,7 +12,10 @@ import org.apache.logging.log4j.Logger;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
+import javax.swing.tree.TreePath;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 /**
  * @author Jiri Kratochvil <jiri.kratochvil@topmonks.com>
@@ -24,13 +28,32 @@ public class DatabaseTree {
     }
 
     private JTree refresh() {
-        DefaultMutableTreeNode database = new DefaultMutableTreeNode(new DatabaseNodeObject("Database", Icons.DATABASE));
+        DefaultMutableTreeNode database = new DefaultMutableTreeNode(new DatabaseNodeObject("Database", Icons.DATABASE, ""));
         createTables(database);
         createViews(database);
         createPlSQL(database);
 
-        JTree tree = new JTree(database);
+        final JTree tree = new JTree(database);
         setTreeRenderer(tree);
+
+        tree.addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent e) {
+                int selRow = tree.getRowForLocation(e.getX(), e.getY());
+                TreePath selPath = tree.getPathForLocation(e.getX(), e.getY());
+                if (selRow != -1) {
+                    if (e.getClickCount() == 2) {
+                        if ((selPath != null) && (selPath.getLastPathComponent() instanceof DefaultMutableTreeNode)) {
+                            DefaultMutableTreeNode node = (DefaultMutableTreeNode) selPath.getLastPathComponent();
+                            if (node.getUserObject() instanceof EntityInfo) {
+                                String sql = ((EntityInfo) (node.getUserObject())).getQuery();
+                                logger.debug("Loading entity preview - {}", sql);
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
         return tree;
     }
 
@@ -44,7 +67,7 @@ public class DatabaseTree {
                         selected, expanded, isLeaf, row, focused);
 
 
-                if ((value instanceof DefaultMutableTreeNode) && (((DefaultMutableTreeNode)value).getUserObject() instanceof DatabaseNodeObject)) {
+                if ((value instanceof DefaultMutableTreeNode) && (((DefaultMutableTreeNode) value).getUserObject() instanceof DatabaseNodeObject)) {
                     setIcon(((DatabaseNodeObject) (((DefaultMutableTreeNode) value).getUserObject())).getIcon().getIcon());
                 }
                 return c;
@@ -58,7 +81,7 @@ public class DatabaseTree {
     }
 
     private void createViews(DefaultMutableTreeNode database) {
-        DefaultMutableTreeNode views = new DefaultMutableTreeNode(new DatabaseNodeObject("Views", Icons.VIEW));
+        DefaultMutableTreeNode views = new DefaultMutableTreeNode(new DatabaseNodeObject("Views", Icons.VIEW, "select * from {}"));
 
         Structure.getInstance().setViews(new Views().load());
         for (ViewInfo view : Structure.getInstance().getViews()) {
@@ -70,7 +93,7 @@ public class DatabaseTree {
     }
 
     private void createTables(DefaultMutableTreeNode database) {
-        DefaultMutableTreeNode tables = new DefaultMutableTreeNode(new DatabaseNodeObject("Tables", Icons.TABLE));
+        DefaultMutableTreeNode tables = new DefaultMutableTreeNode(new DatabaseNodeObject("Tables", Icons.TABLE, "select * from {}"));
 
         Structure.getInstance().setTables(new Tables().load());
 

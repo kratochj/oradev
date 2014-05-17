@@ -51,7 +51,14 @@ public class SQLWindow implements RegisteredWindow {
 
         JPanel sqlEditor = new JPanel(new BorderLayout());
 
-        final RSyntaxTextArea textArea = new RSyntaxTextArea(20, 60);
+        final RSyntaxTextArea textArea = new RSyntaxTextArea(20, 60){
+            @Override
+            public void addNotify() {
+                super.addNotify();
+                requestFocus();
+            }
+        };
+
         textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_SQL);
         //textArea.setCodeFoldingEnabled(true);
         RTextScrollPane sp = new RTextScrollPane(textArea);
@@ -88,6 +95,8 @@ public class SQLWindow implements RegisteredWindow {
         splitPane.add(sqlEditor, JSplitPane.TOP);
 
         panel.add(splitPane);
+
+        textArea.grabFocus();
         return panel;
     }
 

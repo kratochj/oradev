@@ -3,7 +3,7 @@ package eu.kratochvil.oradev.database.model;
 /**
  * @author Jiri Kratochvil <jiri.kratochvil@topmonks.com>
  */
-public class TableInfo {
+public class TableInfo implements EntityInfo{
 
     String tablename;
 
@@ -14,5 +14,10 @@ public class TableInfo {
     @Override
     public String toString() {
        return tablename;
+    }
+
+    @Override
+    public String getQuery() {
+        return "select * from " + tablename;
     }
 }
