@@ -27,7 +27,7 @@ public class App {
             System.setProperty("apple.laf.useScreenMenuBar", "true");
             System.setProperty("com.apple.mrj.application.apple.menu.about.name", "Test");
             System.setProperty("Quaqua.tabLayoutPolicy", "wrap");
-            System.setProperty("Quaqua.design","mavericks");
+            System.setProperty("Quaqua.design","auto");
 
             UIManager.setLookAndFeel(QuaquaManager.getLookAndFeel());
             //UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
