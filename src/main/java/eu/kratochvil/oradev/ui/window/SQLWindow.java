@@ -95,8 +95,12 @@ public class SQLWindow implements RegisteredWindow {
         String query = textArea.getText();
         if (StringUtils.isNotEmpty(textArea.getSelectedText())) {
             query = textArea.getSelectedText();
+        } else {
+            if (query.contains(";")) {
+                selectSingleCommand(textArea);
+                query = textArea.getSelectedText();
+            }
         }
-
 
         logger.debug("Executing query: {}", query);
         QueryRunner runner = new SelectQueryRunner();
@@ -106,6 +110,28 @@ public class SQLWindow implements RegisteredWindow {
         if (tableModel.size()<0) {
             UiComponents.alert("There is more than 100 records!");
         }
+    }
+
+    private void selectSingleCommand(JTextArea textArea) {
+        String text = textArea.getText();
+        int pos = textArea.getCaretPosition();
+        int nextSemicol = text.indexOf(";", pos);
+        int prevSemicol = text.substring(0, pos).lastIndexOf(";");
+
+        if (nextSemicol < 0) {
+            nextSemicol = text.length();
+        }
+        if (prevSemicol < 0) {
+            prevSemicol = 0;
+        } else {
+            prevSemicol++;
+        }
+
+        logger.debug("Text after cursor: {}", text.substring(prevSemicol, nextSemicol));
+        textArea.setSelectionStart(prevSemicol);
+        textArea.setSelectionEnd(nextSemicol);
+
+
     }
 
 
