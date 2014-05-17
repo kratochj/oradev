@@ -1,5 +1,8 @@
 package eu.kratochvil.oradev.ui;
 
+import eu.kratochvil.oradev.database.Structure;
+import eu.kratochvil.oradev.database.model.TableInfo;
+import eu.kratochvil.oradev.database.model.ViewInfo;
 import org.fife.ui.autocomplete.BasicCompletion;
 import org.fife.ui.autocomplete.CompletionProvider;
 import org.fife.ui.autocomplete.DefaultCompletionProvider;
@@ -36,6 +39,16 @@ public class AutocompletionProvider {
                 "select * from ", "select * from"));
         provider.addCompletion(new ShorthandCompletion(provider, "ob",
                 "order by", "order by"));
+
+
+        // Add DB objects
+        for (TableInfo tableInfo : Structure.getInstance().getTables()) {
+            provider.addCompletion(new BasicCompletion(provider, tableInfo.toString()));
+        }
+        for (ViewInfo viewInfo : Structure.getInstance().getViews()) {
+                     provider.addCompletion(new BasicCompletion(provider, viewInfo.toString()));
+                 }
+
 
         return provider;
 

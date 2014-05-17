@@ -1,5 +1,6 @@
 package eu.kratochvil.oradev.ui;
 
+import eu.kratochvil.oradev.database.Structure;
 import eu.kratochvil.oradev.database.Tables;
 import eu.kratochvil.oradev.database.Views;
 import eu.kratochvil.oradev.database.model.TableInfo;
@@ -44,7 +45,7 @@ public class DatabaseTree {
 
 
                 if ((value instanceof DefaultMutableTreeNode) && (((DefaultMutableTreeNode)value).getUserObject() instanceof DatabaseNodeObject)) {
-                    setIcon(((DatabaseNodeObject)(((DefaultMutableTreeNode)value).getUserObject())).getIcon().getIcon());
+                    setIcon(((DatabaseNodeObject) (((DefaultMutableTreeNode) value).getUserObject())).getIcon().getIcon());
                 }
                 return c;
             }
@@ -59,7 +60,8 @@ public class DatabaseTree {
     private void createViews(DefaultMutableTreeNode database) {
         DefaultMutableTreeNode views = new DefaultMutableTreeNode(new DatabaseNodeObject("Views", Icons.VIEW));
 
-        for (ViewInfo view : new Views().load()) {
+        Structure.getInstance().setViews(new Views().load());
+        for (ViewInfo view : Structure.getInstance().getViews()) {
             logger.trace("Adding table: {}", view);
             views.add(new DefaultMutableTreeNode(view));
         }
@@ -70,7 +72,9 @@ public class DatabaseTree {
     private void createTables(DefaultMutableTreeNode database) {
         DefaultMutableTreeNode tables = new DefaultMutableTreeNode(new DatabaseNodeObject("Tables", Icons.TABLE));
 
-        for (TableInfo table : new Tables().load()) {
+        Structure.getInstance().setTables(new Tables().load());
+
+        for (TableInfo table : Structure.getInstance().getTables()) {
             logger.trace("Adding table: {}", table);
             tables.add(new DefaultMutableTreeNode(table));
         }

@@ -6,6 +6,7 @@ import eu.kratochvil.oradev.database.runner.QueryRunner;
 import eu.kratochvil.oradev.database.runner.SelectQueryRunner;
 import eu.kratochvil.oradev.database.runner.SelectQueryTableModel;
 import eu.kratochvil.oradev.ui.UiComponents;
+import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.fife.ui.autocomplete.AutoCompletion;
@@ -56,6 +57,16 @@ public class SQLWindow implements RegisteredWindow {
         RTextScrollPane sp = new RTextScrollPane(textArea);
         //cp.add(sp);
 
+        String keyStrokeAndKey = "control ENTER";
+        KeyStroke keyStroke = KeyStroke.getKeyStroke(keyStrokeAndKey);
+        textArea.getInputMap().put(keyStroke, keyStrokeAndKey);
+        textArea.getActionMap().put(keyStrokeAndKey, new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                runQuery(textArea, splitPane);
+            }
+        });
+
         //final JTextArea jTextArea = new JTextArea(10, 0);
         sqlEditor.add(sp, BorderLayout.CENTER);
 
@@ -68,14 +79,7 @@ public class SQLWindow implements RegisteredWindow {
         executeSql.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                logger.debug("Executing query: {}", textArea.getText());
-                QueryRunner runner = new SelectQueryRunner();
-                runner.execute(tableModel, textArea.getText());
-                tableModel.fireTableStructureChanged();
-                splitPane.add(createTable(tableModel), JSplitPane.BOTTOM);
-                if (tableModel.size()<0) {
-                    UiComponents.alert("There is more than 100 records!");
-                }
+                runQuery(textArea, splitPane);
             }
         });
 
@@ -85,6 +89,23 @@ public class SQLWindow implements RegisteredWindow {
 
         panel.add(splitPane);
         return panel;
+    }
+
+    private void runQuery(RSyntaxTextArea textArea, JSplitPane splitPane) {
+        String query = textArea.getText();
+        if (StringUtils.isNotEmpty(textArea.getSelectedText())) {
+            query = textArea.getSelectedText();
+        }
+
+
+        logger.debug("Executing query: {}", query);
+        QueryRunner runner = new SelectQueryRunner();
+        runner.execute(tableModel, query);
+        tableModel.fireTableStructureChanged();
+        splitPane.add(createTable(tableModel), JSplitPane.BOTTOM);
+        if (tableModel.size()<0) {
+            UiComponents.alert("There is more than 100 records!");
+        }
     }
 
 
