@@ -35,7 +35,7 @@
             <version>10.2.0.4</version>
         </dependency>
 
-        <!-- SqlEditor -->
+        <!-- swing -->
         <dependency>
             <groupId>com.fifesoft</groupId>
             <artifactId>rsyntaxtextarea</artifactId>
@@ -51,37 +51,42 @@
             <artifactId>rstaui</artifactId>
             <version>2.5.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.devzendo</groupId>
+            <artifactId>Quaqua</artifactId>
+            <version>7.3.4</version>
+        </dependency>
 
     </dependencies>
 
     <build>
         <plugins>
-<!--
-            <plugin>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <mainClass>eu.kratochvil.oradev.App</mainClass>
-                        </manifest>
-                    </archive>
-                    <descriptorRefs>
-                        <descriptorRef>jar-with-dependencies</descriptorRef>
-                    </descriptorRefs>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>make-assembly</id>
-                        &lt;!&ndash; this is used for inheritance merges &ndash;&gt;
-                        <phase>package</phase>
-                        &lt;!&ndash; bind to the packaging phase &ndash;&gt;
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
--->
+            <!--
+                        <plugin>
+                                         <artifactId>maven-assembly-plugin</artifactId>
+                                         <configuration>
+                                             <archive>
+                                                 <manifest>
+                                                     <mainClass>eu.kratochvil.oradev.App</mainClass>
+                                                 </manifest>
+                                             </archive>
+                                             <descriptorRefs>
+                                                 <descriptorRef>jar-with-dependencies</descriptorRef>
+                                             </descriptorRefs>
+                                         </configuration>
+                                         <executions>
+                                             <execution>
+                                                 <id>make-assembly</id>
+                                                 &lt;!&ndash; this is used for inheritance merges &ndash;&gt;
+                                                 <phase>package</phase>
+                                                 &lt;!&ndash; bind to the packaging phase &ndash;&gt;
+                                                 <goals>
+                                                     <goal>single</goal>
+                                                 </goals>
+                                             </execution>
+                                         </executions>
+                                     </plugin>
+                         -->
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -117,7 +122,6 @@
             </plugin>
         </plugins>
     </build>
-
 
 
 </project>
