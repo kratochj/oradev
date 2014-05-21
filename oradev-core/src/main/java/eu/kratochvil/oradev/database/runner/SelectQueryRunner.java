@@ -1,7 +1,7 @@
 package eu.kratochvil.oradev.database.runner;
 
 import eu.kratochvil.oradev.database.DatabaseConnection;
-import eu.kratochvil.oradev.ui.UiComponents;
+import eu.kratochvil.oradev.ui.components.UiComponents;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

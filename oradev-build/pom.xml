@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>oradev</artifactId>
+        <groupId>eu.kratochvil.oradev</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>oradev-build</artifactId>
+
+    <dependencies>
+        <dependency>
+            <groupId>eu.kratochvil.oradev</groupId>
+            <artifactId>oradev-core</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- Create the Mac OS X BeanMinder.app launcher structure under
+                 target/macosx. -->
+            <plugin>
+                <groupId>org.devzendo</groupId>
+                <artifactId>CrossPlatformLauncherPlugin</artifactId>
+                <configuration>
+                    <os>MacOSX</os>
+                    <applicationName>OraDev</applicationName>
+                    <mainClassName>eu.kratochvil.oradev.App</mainClassName>
+                    <iconsFileName>oradev.icns</iconsFileName>
+                    <bundleSignature>OD</bundleSignature>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>createlauncher</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>createlauncher</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Copy the Quaqua native libraries into the correct location in
+                 the Mac OS X launcher structure created above. -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>unpack-dependencies</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.devzendo</groupId>
+                                    <artifactId>LibQuaqua</artifactId>
+                                    <version>7.3.4</version>
+                                    <type>zip</type>
+                                    <overWrite>true</overWrite>
+                                    <includes>*</includes>
+                                    <outputDirectory>
+                                        ${project.build.directory}/macosx/OraDev.app/Contents/Resources/Java/lib
+                                    </outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                            <!-- other configurations here -->
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Package up the above .app structure into a .tar.gz archive  -->
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <descriptorRefs>
+                        <descriptorRef>macosx-launcher-distribution</descriptorRef>
+                    </descriptorRefs>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.devzendo</groupId>
+                        <artifactId>CrossPlatformLauncherPlugin</artifactId>
+                        <version>0.2.2</version>
+                    </dependency>
+                </dependencies>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>attached</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

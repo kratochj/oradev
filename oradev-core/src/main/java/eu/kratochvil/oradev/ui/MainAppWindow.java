@@ -11,7 +11,7 @@ import java.awt.*;
  */
 public class MainAppWindow extends JFrame {
 
-    private JTabbedPane theDesktop;
+    private CloseableTabbedPane theDesktop;
     private StatusBar statusBar;
 
     static MainAppWindow instance;
@@ -27,7 +27,21 @@ public class MainAppWindow extends JFrame {
         //pane.add(new DatabaseTree().refreshAsScrollPane(), BorderLayout.LINE_START);
         splitPane.add(new DatabaseTree().refreshAsScrollPane(), JSplitPane.LEFT);
 
-        theDesktop = new JTabbedPane(); // create desktop pane
+        theDesktop = new CloseableTabbedPane() {
+            @Override
+            public boolean tabAboutToClose(int tabIndex) {
+                // TODO Co s timhle?
+                String tab = theDesktop.getTabTitleAt(tabIndex);
+                int choice = JOptionPane.showConfirmDialog(null,
+                        "You are about to close '" +
+                                tab + "'\nDo you want to proceed ?",
+                        "Confirmation Dialog",
+                        JOptionPane.YES_NO_OPTION);
+                return choice == 0;
+                // if returned false tab
+                // closing will be canceled
+            }
+        };
         //pane.add(theDesktop, BorderLayout.CENTER);
         pane.add(splitPane, BorderLayout.CENTER);
 

@@ -173,11 +173,10 @@ public class MainMenu implements ActionListener, ItemListener {
         RegisteredWindow window = WindowsRegister.getWindows().get(e.getActionCommand());
         if (window == null) {
             logger.warn("No registered window for command: {}", e.getActionCommand());
-            return ;
+            return;
         }
 
-
-        theDesktop.addTab(window.getCaption(), null, window.getPanel(), "Does nothing");
+        theDesktop.addTab(window.getCaption(), null, window.getPanel(), window.getCaption());
     }
 
     @Override

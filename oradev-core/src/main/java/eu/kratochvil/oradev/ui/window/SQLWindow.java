@@ -1,11 +1,12 @@
 package eu.kratochvil.oradev.ui.window;
 
-import eu.kratochvil.oradev.ui.AutocompletionProvider;
 import eu.kratochvil.oradev.database.runner.EnhancedTableModel;
 import eu.kratochvil.oradev.database.runner.QueryRunner;
 import eu.kratochvil.oradev.database.runner.SelectQueryRunner;
 import eu.kratochvil.oradev.database.runner.SelectQueryTableModel;
-import eu.kratochvil.oradev.ui.UiComponents;
+import eu.kratochvil.oradev.ui.AutocompletionProvider;
+import eu.kratochvil.oradev.ui.Icons;
+import eu.kratochvil.oradev.ui.components.UiComponents;
 import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -54,7 +55,6 @@ public class SQLWindow implements RegisteredWindow {
         final JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
         splitPane.add(createTable(tableModel), JSplitPane.BOTTOM);
 
-
         JPanel sqlEditor = new JPanel(new BorderLayout());
 
         final RSyntaxTextArea textArea = new RSyntaxTextArea(20, 60){
@@ -89,7 +89,8 @@ public class SQLWindow implements RegisteredWindow {
         AutoCompletion ac = new AutoCompletion(provider);
         ac.install(textArea);
 
-        JButton executeSql = new JButton("Run");
+        JButton executeSql = new JButton();
+        executeSql.setIcon(Icons.EXECUTE.getIcon());
         executeSql.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -114,6 +115,12 @@ public class SQLWindow implements RegisteredWindow {
 
     private void runQuery(RSyntaxTextArea textArea, JSplitPane splitPane) {
         String query = textArea.getText();
+        if (StringUtils.isBlank(query)) {
+            logger.debug("Query is empty");
+            UiComponents.alert("Empty query");
+            return;
+        }
+
         if (StringUtils.isNotEmpty(textArea.getSelectedText())) {
             query = textArea.getSelectedText();
         } else {

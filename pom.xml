@@ -5,123 +5,79 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>eu.kratochvil.oradev</groupId>
-    <artifactId>oradev-core</artifactId>
+    <artifactId>oradev</artifactId>
+    <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
+    <modules>
+        <module>oradev-core</module>
+        <module>oradev-build</module>
+    </modules>
 
-    <dependencies>
+    <dependencyManagement>
+        <dependencies>
+            <!-- Project dependencies -->
+            <dependency>
+                <groupId>eu.kratochvil.oradev</groupId>
+                <artifactId>oradev-core</artifactId>
+                <version>1.0-SNAPSHOT</version>
+            </dependency>
 
-        <!--Logger-->
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-api</artifactId>
-            <version>2.0-beta9</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-core</artifactId>
-            <version>2.0-beta9</version>
-        </dependency>
+            <!--Logger-->
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-api</artifactId>
+                <version>2.0-beta9</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-core</artifactId>
+                <version>2.0-beta9</version>
+            </dependency>
 
-        <!--Apache -->
-        <dependency>
-            <groupId>commons-lang</groupId>
-            <artifactId>commons-lang</artifactId>
-            <version>2.6</version>
-        </dependency>
+            <!--Apache -->
+            <dependency>
+                <groupId>commons-lang</groupId>
+                <artifactId>commons-lang</artifactId>
+                <version>2.6</version>
+            </dependency>
 
-        <dependency>
-            <groupId>com.oracle</groupId>
-            <artifactId>ojdbc14</artifactId>
-            <version>10.2.0.4</version>
-        </dependency>
+            <dependency>
+                <groupId>com.oracle</groupId>
+                <artifactId>ojdbc14</artifactId>
+                <version>10.2.0.4</version>
+            </dependency>
 
-        <!-- swing -->
-        <dependency>
-            <groupId>com.fifesoft</groupId>
-            <artifactId>rsyntaxtextarea</artifactId>
-            <version>1.4.1</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fifesoft</groupId>
-            <artifactId>autocomplete</artifactId>
-            <version>r239</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fifesoft</groupId>
-            <artifactId>rstaui</artifactId>
-            <version>2.5.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.devzendo</groupId>
-            <artifactId>Quaqua</artifactId>
-            <version>7.3.4</version>
-        </dependency>
+            <!-- swing -->
+            <dependency>
+                <groupId>com.fifesoft</groupId>
+                <artifactId>rsyntaxtextarea</artifactId>
+                <version>1.4.1</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fifesoft</groupId>
+                <artifactId>autocomplete</artifactId>
+                <version>r239</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fifesoft</groupId>
+                <artifactId>rstaui</artifactId>
+                <version>2.5.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.devzendo</groupId>
+                <artifactId>Quaqua</artifactId>
+                <version>7.3.4</version>
+            </dependency>
+            <dependency>
+                <groupId>org.devzendo</groupId>
+                <artifactId>LibQuaqua</artifactId>
+                <version>7.3.4</version>
+                <type>zip</type>
+            </dependency>
 
-    </dependencies>
+        </dependencies>
+    </dependencyManagement>
 
-    <build>
-        <plugins>
-            <!--
-                        <plugin>
-                                         <artifactId>maven-assembly-plugin</artifactId>
-                                         <configuration>
-                                             <archive>
-                                                 <manifest>
-                                                     <mainClass>eu.kratochvil.oradev.App</mainClass>
-                                                 </manifest>
-                                             </archive>
-                                             <descriptorRefs>
-                                                 <descriptorRef>jar-with-dependencies</descriptorRef>
-                                             </descriptorRefs>
-                                         </configuration>
-                                         <executions>
-                                             <execution>
-                                                 <id>make-assembly</id>
-                                                 &lt;!&ndash; this is used for inheritance merges &ndash;&gt;
-                                                 <phase>package</phase>
-                                                 &lt;!&ndash; bind to the packaging phase &ndash;&gt;
-                                                 <goals>
-                                                     <goal>single</goal>
-                                                 </goals>
-                                             </execution>
-                                         </executions>
-                                     </plugin>
-                         -->
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>copy-dependencies</id>
-                        <phase>prepare-package</phase>
-                        <goals>
-                            <goal>copy-dependencies</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
-                            <overWriteReleases>false</overWriteReleases>
-                            <overWriteSnapshots>false</overWriteSnapshots>
-                            <overWriteIfNewer>true</overWriteIfNewer>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <addClasspath>true</addClasspath>
-                            <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>eu.kratochvil.oradev.App</mainClass>
-                        </manifest>
-                    </archive>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
 
 
 </project>

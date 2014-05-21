@@ -7,6 +7,7 @@ import javax.swing.*;
  */
 public enum Icons {
 
+    EXECUTE("execute.png", "Execute Query"),
     TABLE("table.png", "Database table"),
     VIEW("view.png", "Database View"),
     DATABASE("database.png", "Database connection");
@@ -14,7 +15,7 @@ public enum Icons {
     private ImageIcon icon;
 
     Icons(String filename, String description) {
-        this.icon = createImageIcon("/icons/" + filename, description);
+        this.icon = createImageIcon("/eu.kratochvil.oradev.icons/" + filename, description);
     }
 
     public ImageIcon getIcon() {
